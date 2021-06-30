@@ -1,8 +1,8 @@
+#include <iostream>
 #include "draw.h"
 
-void drawScene(App &app) {
+void drawScene(App &app, SDL_Surface *KeyPressedSurface) {
     SDL_Surface* gScreenSurface = NULL;
-    SDL_Surface* gHelloWorld = NULL;
 
     gScreenSurface = SDL_GetWindowSurface(app.window);
     if (!gScreenSurface) {
@@ -10,14 +10,24 @@ void drawScene(App &app) {
         exit(1);
     }
 
-    gHelloWorld = SDL_LoadBMP("example.bmp");
-    if (!gHelloWorld) {
-        printf("Unable to load PNG image! SDL error: %s\n", SDL_GetError());
-        exit(1);
-    }
-
-    SDL_BlitSurface(gHelloWorld, NULL, gScreenSurface, NULL);
+    SDL_BlitSurface(KeyPressedSurface, NULL, gScreenSurface, NULL);
     SDL_UpdateWindowSurface(app.window);
+}
+
+SDL_Surface * loadSurface(const char * path) {
+    SDL_Surface * surface = SDL_LoadBMP(path);
+    if (surface == NULL) {
+        std::cout << "Unable to load image: " << path << "Error: " << SDL_GetError() << std::endl;
+    }
+    return surface;
+}
+
+void loadResources(SDL_Surface ** KeyPressSurfaces) {
+    KeyPressSurfaces[KEY_PRESS_SURFACE_DEFAULT] = loadSurface("asset/ex1.bmp");
+    KeyPressSurfaces[KEY_PRESS_SURFACE_UP] = loadSurface("asset/ex2.bmp");
+    KeyPressSurfaces[KEY_PRESS_SURFACE_DOWN] = loadSurface("asset/ex2.bmp");
+    KeyPressSurfaces[KEY_PRESS_SURFACE_LEFT] = loadSurface("asset/ex3.bmp");
+    KeyPressSurfaces[KEY_PRESS_SURFACE_RIGHT] = loadSurface("asset/ex3.bmp");
 }
 
 void close(App &app) {

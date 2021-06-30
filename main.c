@@ -4,18 +4,24 @@
 #include "input.h"
 #include "structs.h"
 
+App app;
+SDL_Surface * KeyPressSurfaces[KEY_PRESS_SURFACE_TOTAL];
+int CurrentSurface = KEY_PRESS_SURFACE_DEFAULT;
+
 int main(int argc, char *argv[]) {
-    App app;
     memset(&app, 0, sizeof(App));
 
     // Initialize SDL window and renderer
     initSDL(app);
 
-    // Load Image and draw it to the screen
-    drawScene(app);
+    // Load Image Resources
+    loadResources(KeyPressSurfaces);
 
-    // Delay before closing
-    SDL_Delay(2000);
+    while (1) {
+        doInput(app, CurrentSurface);
+        drawScene(app, KeyPressSurfaces[CurrentSurface]);
+        SDL_Delay(16);
+    }
 
     //close(app);
 }
